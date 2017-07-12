@@ -1,0 +1,10 @@
+usage: archive.py [-h] [--arch ARCH] url [url ...]
+
+Mailinglists are dead. Long live mailinglists!
+
+positional arguments:
+  url          mailinglist urls to archive
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --arch ARCH  path to archives directory (default='archives')
