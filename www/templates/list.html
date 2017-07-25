@@ -1,0 +1,10 @@
+<html>
+<head></head>
+<body>
+	<ul>
+	 {% for t in list %}
+	 <li><a href="{{ list_name }}/{{ t.name }}"><h3>{{ t.name }} -- {{ t.nbr_threads }}</h3></a></li>
+	 {% endfor %}
+	 </ul>
+</body>
+</html>

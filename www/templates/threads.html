@@ -1,0 +1,25 @@
+<html>
+<head></head>
+<body>
+{% macro message(m, index, urlpath)-%}
+{% set path = urlpath + '/' + index|string %}
+	<li>
+		 {{ index }}. <a href="{{ path }}">{{ m.subject }}</a> <i>{{ m.author_name }}</i>
+		 {% if m.get('follow-up') %}
+		 <ul>
+		 	{% for msg in m.get('follow-up') %}
+		 		{{ message(m=msg, index=loop.index - 1, urlpath=path) }}
+		 	{% endfor %}
+		 </ul>
+		 {% endif %}		
+	</li>
+{%- endmacro %}
+
+	<ul>
+	 {% for m in threads recursive %}
+	 	{{ message(m=m, index=loop.index - 1, urlpath=sublist_name) }}
+	 {% endfor %}
+	 </ul>
+
+</body>
+</html>

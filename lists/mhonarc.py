@@ -1,26 +1,14 @@
-import urllib2, urllib, urlparse
-import logging
+import urllib.request, urllib.parse
+import logging, os, sys, traceback, re, time, json, gzip
 from bs4 import BeautifulSoup
-import email, email.parser
-from email.mime.text import MIMEText
-import mailbox
-import time, dateutil, string
-from pprint import pprint as pp
-import sys, os, re, json, gzip
-import traceback
 
 DELAY = 0.2
 
-# hack for the mailbox module (re: force mbox.add() encoding to utf8)
-reload(sys) 
-sys.setdefaultencoding('utf8')
-
-
 def collect_from_url(url, sublist_name, base_arch_dir="archives", mbox=False):
 
-    response = urllib2.urlopen(url)
-    html = response.read()
-    soup = BeautifulSoup(html, "html.parser")
+    response = urllib.request.urlopen(url)
+    html = response.read().decode(encoding="utf-8")
+    soup = BeautifulSoup(html, "html5lib")
 
     # base url 
     base_url = soup.select('body p:nth-of-type(2) base')[0].get('href')
@@ -68,9 +56,9 @@ def collect_from_url(url, sublist_name, base_arch_dir="archives", mbox=False):
 
 def collect_threads_from_url(url, base_arch_dir, mbox):
 
-    response = urllib2.urlopen(url)
-    html = response.read()
-    soup = BeautifulSoup(html, "html.parser")
+    response = urllib.request.urlopen(url)
+    html = response.read().decode(encoding="utf-8")
+    soup = BeautifulSoup(html, "html5lib")
 
     # base url 
     base_url = url
@@ -105,8 +93,6 @@ def collect_threads_from_url(url, base_arch_dir, mbox):
                 threads['threads'].append(thread)
             except:
                 ex_type, ex, tb = sys.exc_info()
-                print ex_type
-                print ex
                 traceback.print_tb(tb)
                 del tb                
                 continue
@@ -119,33 +105,7 @@ def collect_threads_from_url(url, base_arch_dir, mbox):
         with open(file_path, 'w') as fp:
             json.dump(threads, fp, indent=4)
 
-    if mbox:
-        mbox_path = os.path.join(base_arch_dir, threads['name'] + ".txt")
-        mbox_path_gz = mbox_path + ".gz"
-        logging.info("writing mbox  " + mbox_path)
-        if not os.path.isfile(mbox_path):
-            box = mailbox.mbox(mbox_path)
-            box.lock()
-            try:
-                for t in threads['threads']:
-                    write_mbox_message(t, box)
-                box.flush()
-            except:
-                ex_type, ex, tb = sys.exc_info()
-                print ex_type
-                print ex
-                traceback.print_tb(tb)
-                del tb
-            finally:
-                box.unlock()
-
-            with open(mbox_path) as fpin, gzip.open(mbox_path + '.gz', 'wb') as fpout:
-                fpout.writelines(fpin)
-
-        else:
-            logging.info("mbox  " + mbox_path + " already exists.")            
-
-    logging.info("done. ")
+        logging.info("done. ")
 
     return threads
 
@@ -183,11 +143,9 @@ def archive_thread(li, base_url, parent_thread_data):
 
 def collect_message(url, message):
 
-    print url
-
-    response = urllib2.urlopen(url)
-    html = response.read()
-    soup = BeautifulSoup(html, "html.parser")
+    response = urllib.request.urlopen(url)
+    html = response.read().decode(encoding="utf-8")
+    soup = BeautifulSoup(html, "html5lib")    
 
     #note: this should follow an RFC header standard -- MHonArc has header info in the 1th <pre>
 
@@ -208,9 +166,9 @@ def collect_message(url, message):
     for i in info:
         if i.em == None:
             continue
-    	field = i.em.string
-    	if field.lower() in message_labels:
-    		message[field.lower()] = i.text.strip(field + ": ")
+        field = i.em.string
+        if field.lower() in message_labels:
+        	message[field.lower()] = i.text.strip(field + ": ")
 
     ## reformat from -- [author_name, email_addr]
 
@@ -219,7 +177,12 @@ def collect_message(url, message):
     # message['from'] = from_addr[1]
 
     ## -- content --
-    message['content'] = soup.select('pre:nth-of-type(2)')[0].text
+    # test
+    c1 = soup.select('pre:nth-of-type(1)')
+    if len(c1) > 0:
+        message['content'] = c1[0].text
+    else:
+        message['content'] = soup.select('pre:nth-of-type(2)')[0].text
 
 # mhonarc xcomments
 # ref: http://www.schlaubert.de/MHonArc/doc/resources/printxcomments.html
@@ -229,22 +192,5 @@ def parse_xcomment(soup, xcom):
         return com.strip('<!-- ').strip(' -->').strip(xcom + ":").strip()
     return com
 
-def to_mbox_message(msg):
-    mime = MIMEText('', 'plain', _charset='utf8')
-    mime['From'] = msg['from']
-    mime['Subject'] = msg['subject']
-    mime['Message-Id'] = msg['message-id']
-    mime['Date'] = msg['date']
-    mime.set_payload(msg['content'], charset='utf8')
-    mbox_message = mailbox.mboxMessage(mime)
-    mbox_message.set_from(mime['From'], email.utils.parsedate(mime['Date']))
-    return mbox_message
-
-# throws exception
-def write_mbox_message(msg, mbox):
-    mbox_msg = to_mbox_message(msg)
-    mbox.add(mbox_msg) # here
-    if u'follow-up' in msg:
-        for f in msg['follow-up']:
-            write_mbox_message(f, mbox)
-
+def test_xcomment(soup):
+    return soup.find(text=re.compile('X-Message-Id')) is not None
