@@ -11,7 +11,8 @@ class Archives(metaclass=Singleton):
 
 	def __init__(self, archives_dir=None):
 		if archives_dir==None:
-			self.archives_dir = "archives/"
+			from www import config
+			self.archives_dir = config.ARCHIVES_PATH
 		else:
 			self.archives_dir = archives_dir
 
