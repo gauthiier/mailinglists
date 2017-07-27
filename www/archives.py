@@ -18,11 +18,11 @@ class Archives(metaclass=Singleton):
 		self.data = {}
 		self.loaded = False
 
-		loggin.info('loading archives...')
+		logging.info('loading archives...')
 
 		self.load()
 
-		loggin.info('done.')
+		logging.info('done.')
 
 	def load(self):
 
