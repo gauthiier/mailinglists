@@ -1,0 +1,2 @@
+# using miniconda mailinglists venv
+source activate mailinglists
