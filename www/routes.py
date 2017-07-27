@@ -1,6 +1,7 @@
-from flask import render_template
+from flask import render_template, request, jsonify
 from www import app
 from www import archives
+import search.archive
 from datetime import datetime
 
 @app.route('/')
@@ -46,6 +47,9 @@ def get_list(list):
 @app.route('/<list>/<sublist>')
 def get_sublist(list, sublist):
 
+	print(list)
+	print(sublist)
+
 	sublist = sublist.replace(' ', '_')
 	if list in archives.archives_data and sublist in archives.archives_data[list]:
 		return render_template("threads.html", sublist_name=sublist, threads=archives.archives_data[list][sublist]['threads'])
@@ -80,6 +84,54 @@ def get_follow_ups(list, sublist, index, follow_ups):
 		return render_template("message.html", message=message)
 	else:
 		'nope nope'
+
+@app.route('/search')
+def searh():
+	
+	if len(request.args) < 1:
+		k = archives.archives_data.keys()
+		return render_template("search.html", archives=k)
+
+	k_arg = request.args.get('keyword')
+	l_arg = request.args.get('list')
+	sl_arg = request.args.get('sublist')
+
+	if k_arg is None or k_arg.strip() == '':
+		return "no keyword..."
+
+	if l_arg is None:
+		return "no list..."
+	
+	if not (l_arg == "all") and not (l_arg in archives.archives_data):
+		return "list '" + l_arg + "' does not exist"
+
+	if sl_arg is not None:
+		if not sl_arg in archives.archives_data[l]:
+			return "sublist '" + sl_arg + "' does not exist in list '" + l_arg + "'"
+
+	lists = []
+	if l_arg == "all":
+		for k in archives.archives_data.keys():
+			lists.append(k)
+	else:
+		lists.append(l_arg)
+
+	################################
+	##
+	##	need to chache all the below
+	##
+	################################
+
+	results = []
+	for l in lists:
+		a = search.archive.Archive()
+		a.load(l)
+		results.append(a.search(k_arg))
+
+	return jsonify(result=results)
+
+	
+
 
 
 
