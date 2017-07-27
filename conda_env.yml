@@ -1,0 +1,28 @@
+name: mailinglists
+channels:
+- defaults
+dependencies:
+- beautiful-soup=4.3.2=py34_0
+- click=6.7=py34_0
+- flask=0.12=py34_0
+- html5lib=0.999=py34_0
+- itsdangerous=0.24=py34_0
+- jinja2=2.9.6=py34_0
+- markupsafe=0.23=py34_2
+- openssl=1.0.2l=0
+- pip=9.0.1=py34_1
+- python=3.4.5=0
+- readline=6.2=2
+- setuptools=27.2.0=py34_0
+- six=1.10.0=py34_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- werkzeug=0.11.15=py34_0
+- wheel=0.29.0=py34_0
+- xz=5.2.2=1
+- zlib=1.2.8=3
+- pip:
+  - beautifulsoup4==4.3.2
+  - webencodings==0.5.1
+prefix: /Users/gauthiier/Zzz/D/miniconda/envs/mailinglists
+
