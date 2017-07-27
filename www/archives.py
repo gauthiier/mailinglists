@@ -31,6 +31,8 @@ class Archives(metaclass=Singleton):
 
 		if not os.path.isdir(self.archives_dir):
 			logging.error("Archives:: the path - " + self.archives_dir + " - is not a valid directory. Aborting.")
+			logging.erro(" -- current cwd is: " + os.getcwd())
+
 			return
 
 		arch = [d for d in os.listdir(self.archives_dir) if os.path.isdir(os.path.join(self.archives_dir, d))]
