@@ -15,6 +15,7 @@ class Archives(metaclass=Singleton):
 		else:
 			self.archives_dir = archives_dir
 
+		self.data = {}
 		self.loaded = False
 
 	def load(self):
