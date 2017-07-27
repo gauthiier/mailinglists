@@ -8,3 +8,18 @@ positional arguments:
 optional arguments:
   -h, --help   show this help message and exit
   --arch ARCH  path to archives directory (default='archives')
+
+  ---
+
+usage: search.py [-h] [--list LIST [LIST ...]] [--field FIELD] keyword
+
+Searches mailinglist's archives
+
+positional arguments:
+  keyword               keyword to search
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --list LIST [LIST ...]
+                        mailinglist(s') name(s)
+  --field FIELD         message field (i.e. 'content' or 'subject', etc.)
