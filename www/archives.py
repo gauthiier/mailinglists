@@ -18,6 +18,8 @@ class Archives(metaclass=Singleton):
 		self.data = {}
 		self.loaded = False
 
+		self.load()
+
 	def load(self):
 
 		if self.loaded:
