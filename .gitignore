@@ -1,5 +1,6 @@
 # mailinglists specific
 archives/
+figs/
 config.py
 
 # Byte-compiled / optimized / DLL files

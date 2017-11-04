@@ -43,6 +43,17 @@ def collect_from_url(url, name, base_archive_dir):
 			del tb
 			continue
 
+	# archive['name'] = name
+	# archive['list'] = threads
+
+	# file_path = os.path.join(base_arch_dir, name + '.json')
+
+	# with open(file_path, 'w') as fp:
+	# 	json.dump(archive, fp, indent=4)
+
+	# logging.info("done.")
+
+
 def collect_threads_from_url(url, name, base_arch_dir):
 
 	threads = {'name' : name, 'url' : url, 'threads' : []}

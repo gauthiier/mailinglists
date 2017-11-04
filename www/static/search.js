@@ -1,18 +1,26 @@
 
 $(document).ready(function(){
-	$('#search').on('submit', function(e) {
+	$('#loading').hide()
+
+	$('#search').submit(function(e) {
 		e.preventDefault();
 		args = $(this).serialize();	
+		$('#graph').empty();
+		$('#results').empty();		
+
+		$('#loading').show()
 		$.get('/search?'+args, function(data) {
+			$('#loading').hide()
 			console.log(data);
-			$('#graph').empty();
-			$('#results').empty();
+			// $('#graph').empty();
+			// $('#results').empty();
 			$.each(data.result, function(i, item) {
 				search_result_archive(item);
 			});
-			graph(data);
+			graph(data);		
 		});
 	});
+
 });
 
 function search_result_archive(a) {	

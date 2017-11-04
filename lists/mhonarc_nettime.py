@@ -194,13 +194,13 @@ def collect_message(url, message):
 
     ## -- content --
     # test
-    c1 = soup.select('pre:nth-of-type(1)')
-    if len(c1) > 0:
-        message['content'] = c1[0].text
-    else:
-        message['content'] = soup.select('pre:nth-of-type(2)')[0].text
+    # c1 = soup.select('pre:nth-of-type(1)')
+    # if len(c1) > 0:
+    #     message['content'] = c1[0].text
+    # else:
+    #     message['content'] = soup.select('pre:nth-of-type(2)')[0].text
 
-    # message['content'] = soup.select('pre:nth-of-type(2)')[0].text
+    message['content'] = soup.select('pre:nth-of-type(2)')[0].text
 
 # mhonarc xcomments
 # ref: http://www.schlaubert.de/MHonArc/doc/resources/printxcomments.html

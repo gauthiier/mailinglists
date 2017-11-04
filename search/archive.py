@@ -69,6 +69,10 @@ class Archive():
 				i += 1
 
 			if nbr_hits > 0:
+				# nettime-l - fix (the name of the thread from ex. 'nettime-l_Jan_01' to 'January 2001')
+				if k.startswith("nettime-l_"):
+					dt = datetime.strptime(k, "nettime-l_%b_%y")
+					k = dt.strftime("%B_%Y")
 				search_results['results'].append({ 'thread': k, 'nbr_hits': nbr_hits, 'hits': hits})
 
 		return search_results
@@ -94,6 +98,12 @@ def get_key(kv_tuple):
 	# k is of the form "Year" - ex.: "2001"
 	try:
 		return datetime.strptime(k, "%Y")
+	except Exception:
+		pass
+
+	# nettime-l - fix - k is of the form "nettime-l_Month(abv)_Year(abv)" - ex.: "nettime-l_Jan_01"
+	try:
+		return datetime.strptime(k, "nettime-l_%b_%y")
 	except Exception:
 		pass
 

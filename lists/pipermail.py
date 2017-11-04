@@ -8,7 +8,8 @@ DELAY = 0.2
 def collect_from_url(url, name, base_archive_dir):
 
 	response = urllib.request.urlopen(url)
-	html = response.read().decode(encoding="utf-8")
+	# html = response.read().decode(encoding="utf-8")
+	html = response.read()
 	soup = BeautifulSoup(html, "html5lib")
 
 	threads_list = soup.find_all('tr')
@@ -195,7 +196,8 @@ def collect_message(url, message):
 	# logging.info("	+ " + url)
 
 	response = urllib.request.urlopen(url)
-	html = response.read().decode(encoding="utf-8")
+	# html = response.read().decode(encoding="utf-8")
+	html = response.read()
 	soup = BeautifulSoup(html, "html5lib")
 
 	if lists.mhonarc.test_xcomment(soup):

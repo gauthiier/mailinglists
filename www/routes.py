@@ -118,7 +118,7 @@ def searh():
 
 	################################
 	##
-	##	need to chache all the below
+	##	need to cache all the below??
 	##
 	################################
 
@@ -128,7 +128,13 @@ def searh():
 		a.load(l)
 		results.append(a.search(k_arg))
 
-	return jsonify(result=results)
+	## -- sort results?
+	search_results = sorted(results, key=get_result_key)
+
+	return jsonify(result=search_results)
+
+def get_result_key(r):
+	return r['archive']
 
 	
 
