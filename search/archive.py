@@ -39,7 +39,7 @@ class Archive():
 	def search_message(self, keyword, msg, index_str, results, field='content'):
 
 		nbr_hits = 0
-		if msg[field].find(keyword) > 0:
+		if msg[field] is not None and msg[field].lower().find(keyword.lower()) > 0:
 			nbr_hits += 1
 			results.append({ "index_str": index_str, "subject": msg['subject'], "date": msg['date'], "author_name": msg['author_name'], "url": msg['url'] })
 

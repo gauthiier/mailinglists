@@ -9,7 +9,7 @@ $(document).ready(function(){
 		$('#results').empty();		
 
 		$('#loading').show()
-		$.get('/search?'+args, function(data) {
+		$.get('/search?'+ args, function(data) {
 			$('#loading').hide()
 			console.log(data);
 			// $('#graph').empty();

@@ -90,11 +90,12 @@ def searh():
 	
 	if len(request.args) < 1:
 		k = archives.archives_data.keys()
-		return render_template("search.html", archives=k)
+		return render_template("search.html", archives=k, fields=['content', 'from(name)', 'from(email)'])
 
 	k_arg = request.args.get('keyword')
 	l_arg = request.args.get('list')
 	sl_arg = request.args.get('sublist')
+	f_arg = request.args.get('field')
 
 	if k_arg is None or k_arg.strip() == '':
 		return "no keyword..."
@@ -109,6 +110,11 @@ def searh():
 		if not sl_arg in archives.archives_data[l]:
 			return "sublist '" + sl_arg + "' does not exist in list '" + l_arg + "'"
 
+	if f_arg == "from(name)":
+		f_arg = 'author_name'
+	elif f_arg == "from(email)":
+		f_arg = 'from'
+
 	lists = []
 	if l_arg == "all":
 		for k in archives.archives_data.keys():
@@ -118,15 +124,16 @@ def searh():
 
 	################################
 	##
-	##	need to cache all the below??
+	##	need to cache all the below
 	##
 	################################
 
 	results = []
 	for l in lists:
+		# this makes no sense...
 		a = search.archive.Archive()
 		a.load(l)
-		results.append(a.search(k_arg))
+		results.append(a.search(keyword=k_arg, field=f_arg))
 
 	## -- sort results?
 	search_results = sorted(results, key=get_result_key)
