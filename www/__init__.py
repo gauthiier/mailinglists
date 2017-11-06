@@ -5,7 +5,7 @@ app = Flask(__name__)
 from www import routes
 from www import config
 
-app.run(debug=True, use_reloader=False)
+#app.run(debug=True, use_reloader=False)
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
