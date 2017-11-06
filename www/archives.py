@@ -10,6 +10,10 @@ class Singleton(type):
 class Archives(metaclass=Singleton):
 
 	def __init__(self, archives_dir=None):
+
+
+		print("Archives::init")
+
 		if archives_dir==None:
 			from www import config
 			self.archives_dir = config.ARCHIVES_PATH
