@@ -129,6 +129,9 @@ def searh():
 	################################
 
 	results = []
+
+	logging.info("search keyword = " + k_arg)
+
 	for l in lists:
 		# this makes no sense...
 		a = search.archive.Archive()
