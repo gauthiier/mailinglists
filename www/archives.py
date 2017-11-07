@@ -49,6 +49,8 @@ class Archives(metaclass=Singleton):
 			self.data[a] = self.load_archive(archive_path)
 
 			logging.info("done.")
+
+		self.loaded = True
 		
 
 	def load_archive(self, archive_dir):
