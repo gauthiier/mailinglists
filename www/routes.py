@@ -4,6 +4,7 @@ from www import archives
 import search.archive
 from datetime import datetime
 
+import logging
 logging.info(' ------- arch = Archives() -------- ')
 arch = archives.Archives()
 arch.load()
