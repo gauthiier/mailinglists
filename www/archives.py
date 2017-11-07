@@ -69,10 +69,5 @@ class Archives(metaclass=Singleton):
 
 		return arch	
 
-logging.info(' ------- arch = Archives() -------- ')
-arch = Archives()
-arch.load()
-archives_data = arch.data
-
 
 

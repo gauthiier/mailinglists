@@ -4,9 +4,15 @@ from www import archives
 import search.archive
 from datetime import datetime
 
+logging.info(' ------- arch = Archives() -------- ')
+arch = archives.Archives()
+arch.load()
+archives_data = arch.data
+
+
 @app.route('/')
 def index():
-	k = archives.archives_data.keys()
+	k = archives_data.keys()
 	return render_template("index.html", archives=k)
 
 def get_key(kv_tuple):
@@ -35,9 +41,9 @@ def get_key(kv_tuple):
 
 @app.route('/<list>')
 def get_list(list):
-	if list in archives.archives_data:
+	if list in archives_data:
 		d = []
-		for k, v in sorted(archives.archives_data[list].items(), key=get_key, reverse=True):
+		for k, v in sorted(archives_data[list].items(), key=get_key, reverse=True):
 			d.append({"name": k, "url": v['url'], "nbr_threads": len(v['threads'])})
 		return render_template("list.html", list_name=list, list=d)
 
@@ -51,8 +57,8 @@ def get_sublist(list, sublist):
 	print(sublist)
 
 	sublist = sublist.replace(' ', '_')
-	if list in archives.archives_data and sublist in archives.archives_data[list]:
-		return render_template("threads.html", sublist_name=sublist, threads=archives.archives_data[list][sublist]['threads'])
+	if list in archives_data and sublist in archives_data[list]:
+		return render_template("threads.html", sublist_name=sublist, threads=archives_data[list][sublist]['threads'])
 	else:
 		return 'na na'
 
@@ -61,8 +67,8 @@ def get_message(list, sublist, index):
 
 	sublist = sublist.replace(' ', '_')
 	index = int(index)
-	if list in archives.archives_data and sublist in archives.archives_data[list] and index < len(archives.archives_data[list][sublist]['threads']):
-		return render_template("message.html", message=archives.archives_data[list][sublist]['threads'][index])
+	if list in archives_data and sublist in archives_data[list] and index < len(archives_data[list][sublist]['threads']):
+		return render_template("message.html", message=archives_data[list][sublist]['threads'][index])
 	else:
 		'non non'
 
@@ -77,8 +83,8 @@ def get_follow_ups(list, sublist, index, follow_ups):
 	for u in ups:
 		follow.append(int(u))
 
-	if list in archives.archives_data and sublist in archives.archives_data[list] and index < len(archives.archives_data[list][sublist]['threads']):
-		message = archives.archives_data[list][sublist]['threads'][index]
+	if list in archives_data and sublist in archives_data[list] and index < len(archives_data[list][sublist]['threads']):
+		message = archives_data[list][sublist]['threads'][index]
 		for f in follow:
 			message = message['follow-up'][f]
 		return render_template("message.html", message=message)
@@ -89,7 +95,7 @@ def get_follow_ups(list, sublist, index, follow_ups):
 def searh():
 	
 	if len(request.args) < 1:
-		k = archives.archives_data.keys()
+		k = archives_data.keys()
 		return render_template("search.html", archives=k, fields=['content', 'from(name)', 'from(email)'])
 
 	k_arg = request.args.get('keyword')
@@ -103,11 +109,11 @@ def searh():
 	if l_arg is None:
 		return "no list..."
 	
-	if not (l_arg == "all") and not (l_arg in archives.archives_data):
+	if not (l_arg == "all") and not (l_arg in archives_data):
 		return "list '" + l_arg + "' does not exist"
 
 	if sl_arg is not None:
-		if not sl_arg in archives.archives_data[l]:
+		if not sl_arg in archives_data[l]:
 			return "sublist '" + sl_arg + "' does not exist in list '" + l_arg + "'"
 
 	if f_arg == "from(name)":
@@ -117,7 +123,7 @@ def searh():
 
 	lists = []
 	if l_arg == "all":
-		for k in archives.archives_data.keys():
+		for k in archives_data.keys():
 			lists.append(k)
 	else:
 		lists.append(l_arg)
