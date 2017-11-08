@@ -44,7 +44,7 @@ function search_result_archive(a) {
 	});
 }
 
-var min_month = new Date(1995, 10);
+var min_month = new Date(1995, 9);
 var max_month = new Date();
 
 function diff_months(d1, d2) {
@@ -122,7 +122,7 @@ function graph(data) {
 	    },
 	    bar: {
 	        width: {
-	            ratio: 0.9
+	            ratio: 0.8
 	        }
     	}
 	});
