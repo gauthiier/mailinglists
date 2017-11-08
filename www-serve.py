@@ -1,2 +1,2 @@
 from www import app
-#app.run(debug=True, use_reloader=False)
+app.run(debug=True, use_reloader=False)

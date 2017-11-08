@@ -16,35 +16,35 @@ def index():
 	k = archives_data.keys()
 	return render_template("index.html", archives=k)
 
-def get_key(kv_tuple):
+# def get_key(kv_tuple):
 
-	k = kv_tuple[0]
+# 	k = kv_tuple[0]
 
-	# k is of the form "Month_Year" - ex.: "January_2001"
-	try:
-		return datetime.strptime(k, "%B_%Y")
-	except Exception:
-		pass
+# 	# k is of the form "Month_Year" - ex.: "January_2001"
+# 	try:
+# 		return datetime.strptime(k, "%B_%Y")
+# 	except Exception:
+# 		pass
 
-	# k is of the form "Month(abv)_Year(abv)" - ex.: "Jan_01"
-	try:
-		return datetime.strptime(k, "%b_%y")
-	except Exception:
-		pass
+# 	# k is of the form "Month(abv)_Year(abv)" - ex.: "Jan_01"
+# 	try:
+# 		return datetime.strptime(k, "%b_%y")
+# 	except Exception:
+# 		pass
 
-	# k is of the form "Year" - ex.: "2001"
-	try:
-		return datetime.strptime(k, "%Y")
-	except Exception:
-		pass
+# 	# k is of the form "Year" - ex.: "2001"
+# 	try:
+# 		return datetime.strptime(k, "%Y")
+# 	except Exception:
+# 		pass
 
-	return None
+# 	return None
 
 @app.route('/<list>')
 def get_list(list):
 	if list in archives_data:
 		d = []
-		for k, v in sorted(archives_data[list].items(), key=get_key, reverse=True):
+		for k, v in sorted(archives_data[list].archive.items(), key=search.archive.get_key, reverse=True):
 			d.append({"name": k, "url": v['url'], "nbr_threads": len(v['threads'])})
 		return render_template("list.html", list_name=list, list=d)
 
@@ -58,8 +58,8 @@ def get_sublist(list, sublist):
 	print(sublist)
 
 	sublist = sublist.replace(' ', '_')
-	if list in archives_data and sublist in archives_data[list]:
-		return render_template("threads.html", sublist_name=sublist, threads=archives_data[list][sublist]['threads'])
+	if list in archives_data and sublist in archives_data[list].archive:
+		return render_template("threads.html", sublist_name=sublist, threads=archives_data[list].archive[sublist]['threads'])
 	else:
 		return 'na na'
 
@@ -68,8 +68,8 @@ def get_message(list, sublist, index):
 
 	sublist = sublist.replace(' ', '_')
 	index = int(index)
-	if list in archives_data and sublist in archives_data[list] and index < len(archives_data[list][sublist]['threads']):
-		return render_template("message.html", message=archives_data[list][sublist]['threads'][index])
+	if list in archives_data and sublist in archives_data[list].archive and index < len(archives_data[list].archive[sublist]['threads']):
+		return render_template("message.html", message=archives_data[list].archive[sublist]['threads'][index])
 	else:
 		'non non'
 
@@ -84,8 +84,8 @@ def get_follow_ups(list, sublist, index, follow_ups):
 	for u in ups:
 		follow.append(int(u))
 
-	if list in archives_data and sublist in archives_data[list] and index < len(archives_data[list][sublist]['threads']):
-		message = archives_data[list][sublist]['threads'][index]
+	if list in archives_data and sublist in archives_data[list].archive and index < len(archives_data[list].archive[sublist]['threads']):
+		message = archives_data[list].archive[sublist]['threads'][index]
 		for f in follow:
 			message = message['follow-up'][f]
 		return render_template("message.html", message=message)
@@ -140,10 +140,12 @@ def searh():
 	logging.info("search keyword = " + k_arg)
 
 	for l in lists:
+
 		# this makes no sense...
-		a = search.archive.Archive()
-		a.load(l)
-		results.append(a.search(keyword=k_arg, field=f_arg))
+		# a = search.archive.Archive()
+		# a.load(l)
+
+		results.append(archives_data[l].search(keyword=k_arg, field=f_arg))
 
 	## -- sort results?
 	search_results = sorted(results, key=get_result_key)

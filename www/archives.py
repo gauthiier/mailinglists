@@ -1,4 +1,5 @@
 import logging, os, json
+import search.archive
 
 class Singleton(type):
     _instances = {}
@@ -45,29 +46,35 @@ class Archives(metaclass=Singleton):
 
 			logging.info("loading " + a)
 
-			archive_path = os.path.join(self.archives_dir, a)
-			self.data[a] = self.load_archive(archive_path)
+			# archive_path = os.path.join(self.archives_dir, a)
+			self.data[a] = self.load_archive(self.archives_dir, a)
 
 			logging.info("done.")
 
 		self.loaded = True
 		
 
-	def load_archive(self, archive_dir):
+	def load_archive(self, archive_dir, archive_name):
 
 		if not os.path.isdir(archive_dir):
 			logging.error("Archives:: the path - " + archive_dir + " - is not a valid directory. Aborting.")
 			return
 
-		files = [f for f in os.listdir(archive_dir) if f.endswith('.json')]
+		archive = search.archive.Archive(archive_dir)
+		archive.load(archive_name)
+		return archive
 
-		arch = {}
-		for f in files:
-			file_path = os.path.join(archive_dir, f)
-			with open(file_path) as fdata:
-				arch[f.replace('.json', '')] = json.load(fdata)
+		# # -- shoudl use Archive in searh module here....
 
-		return arch	
+		# files = [f for f in os.listdir(archive_dir) if f.endswith('.json')]
+
+		# arch = {}
+		# for f in files:
+		# 	file_path = os.path.join(archive_dir, f)
+		# 	with open(file_path) as fdata:
+		# 		arch[f.replace('.json', '')] = json.load(fdata)
+
+		# return arch	
 
 
 

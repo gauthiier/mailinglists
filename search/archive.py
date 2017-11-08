@@ -34,7 +34,7 @@ class Archive():
 			with open(file_path) as fdata:
 				self.archive[label] = json.load(fdata)	
 
-		self.loaded = True
+		self.loaded = True		
 
 	def search_message(self, keyword, msg, index_str, results, field='content'):
 
