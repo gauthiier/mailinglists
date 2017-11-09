@@ -53,7 +53,7 @@ class Archive():
 		return nbr_hits
 
 
-	def search(self, keyword, field='content'):
+	def search(self, keyword, field='content', min_hits=0):
 
 		search_results = { "keyword": keyword, "field": field, "archive": self.archive_name, "results": [] }
 
@@ -68,7 +68,7 @@ class Archive():
 				nbr_hits += self.search_message(keyword, m, current_index_str, hits, field)
 				i += 1
 
-			if nbr_hits > 0:
+			if nbr_hits > min_hits:
 				# nettime-l - fix (the name of the thread from ex. 'nettime-l_Jan_01' to 'January 2001')
 				if k.startswith("nettime-l_"):
 					dt = datetime.strptime(k, "nettime-l_%b_%y")

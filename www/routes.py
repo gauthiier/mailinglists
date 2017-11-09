@@ -97,12 +97,13 @@ def searh():
 	
 	if len(request.args) < 1:
 		k = archives_data.keys()
-		return render_template("search.html", archives=k, fields=['content', 'from(name)', 'from(email)'])
+		return render_template("search.html", archives=k, fields=['content', 'from(name)', 'from(email)'], hits=['n/a', '2', '3', '4', '5', '6', '7', '8', '9'])
 
 	k_arg = request.args.get('keyword')
 	l_arg = request.args.get('list')
 	sl_arg = request.args.get('sublist')
 	f_arg = request.args.get('field')
+	h_arg = request.args.get('hits')
 
 	if k_arg is None or k_arg.strip() == '':
 		return "no keyword..."
@@ -129,6 +130,12 @@ def searh():
 	else:
 		lists.append(l_arg)
 
+	nbr_hits = 0
+	if h_arg in ['2', '3', '4', '5', '6', '7', '8', '9']:
+		nbr_hits = int(h_arg)
+
+
+
 	################################
 	##
 	##	need to cache all the below
@@ -145,7 +152,7 @@ def searh():
 		# a = search.archive.Archive()
 		# a.load(l)
 
-		results.append(archives_data[l].search(keyword=k_arg, field=f_arg))
+		results.append(archives_data[l].search(keyword=k_arg, field=f_arg, min_hits=nbr_hits))
 
 	## -- sort results?
 	search_results = sorted(results, key=get_result_key)

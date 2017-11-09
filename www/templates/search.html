@@ -20,6 +20,11 @@
 			 <option value="{{ a }}">{{ a }}</option>
 			 {% endfor %}
 		</select>		
+		<select form="search" name="hits">
+			 {% for a in hits %}
+			 <option value="{{ a }}">{{ a }}</option>
+			 {% endfor %}
+		</select>				
 		<input type="submit" value="search" id="submit">
 		<div id="loading">Loading...</div>
 	</form>
