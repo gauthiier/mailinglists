@@ -1,6 +1,10 @@
 import logging, os, json, re
 from datetime import datetime
 
+import analysis.archive ## circular...
+import analysis.query
+import analysis.format
+
 class Archive():
 
 	def __init__(self, archives_dir=None):
@@ -74,6 +78,25 @@ class Archive():
 					dt = datetime.strptime(k, "nettime-l_%b_%y")
 					k = dt.strftime("%B_%Y")
 				search_results['results'].append({ 'thread': k, 'nbr_hits': nbr_hits, 'hits': hits})
+
+		return search_results
+
+	def threads_ranking(self, rank=5):
+
+		search_results = { "keyword": "thread ranking", "field": "ranking", "archive": self.archive_name, "results": [] }
+
+		a = analysis.archive.Archive(self)
+		q = a.query();
+
+		ranking = q.threads_ranking(rank=rank)
+
+		for i in ranking:
+			r = analysis.format.frame_to_dictionary_threads_ranking(ranking[i])
+			for h in r:
+				hit = [{ 'url': h['url'], 'subject': h['subject'], 'author_name': h['from']}]				
+				search_results['results'].append({'thread': h['date'], 'nbr_hits': h['nbr-references'], 'hits': hit})
+		del a
+		del q
 
 		return search_results
 

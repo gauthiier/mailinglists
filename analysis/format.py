@@ -31,6 +31,13 @@ def table_threads_ranking(ranking_dataframe):
 
 	return html_str
 
+def frame_to_dictionary_threads_ranking(ranking_dataframe):
+
+	results = []
+	for i, row in ranking_dataframe.iterrows():
+		d = {'date': str(i), 'subject': row['subject'], 'url': row['url'], 'from': row['from'], 'nbr-references': row['nbr-references']}
+		results.append(d)
+	return results
 
 
 

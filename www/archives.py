@@ -77,4 +77,3 @@ class Archives(metaclass=Singleton):
 		# return arch	
 
 
-

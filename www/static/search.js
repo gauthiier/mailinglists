@@ -35,12 +35,21 @@ function search_result_archive(a) {
 			text: r.thread.replace('_', ' ')
 		}).appendTo('#' + a.archive);
 		let hits = "<ul>";
+
+		console.log("---")
+		
 		$.each(r.hits, function(j, h){
+
+			console.log(h)
+
 			let hit = '<li><a href="' + h.url+ '">' + h.subject + '</a> -- <i>' + h.author_name + '</i></li>';
 			hits += hit;
 		});
 		hits += "</ul>";
 		$('#' + r.thread + "-" + a.archive).append(hits);
+
+		console.log("***");
+
 	});
 }
 

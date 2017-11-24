@@ -147,12 +147,13 @@ def searh():
 	logging.info("search keyword = " + k_arg)
 
 	for l in lists:
+		if k_arg == "rank":
+			logging.info("	ranking " + l)
+			s = archives_data[l].threads_ranking()
+		else:
+			s = archives_data[l].search(keyword=k_arg, field=f_arg, min_hits=nbr_hits)
 
-		# this makes no sense...
-		# a = search.archive.Archive()
-		# a.load(l)
-
-		results.append(archives_data[l].search(keyword=k_arg, field=f_arg, min_hits=nbr_hits))
+		results.append(s)
 
 	## -- sort results?
 	search_results = sorted(results, key=get_result_key)

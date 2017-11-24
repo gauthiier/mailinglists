@@ -11,9 +11,15 @@ def format_author(msg, archive_name):
 	return msg['author_name']
 
 def format_from_token(from_str, sep):
+
+	fff = from_str
+
 	from_addr = email.utils.parseaddr(from_str)[1]
+
+	fffa = email.utils.parseaddr(from_str)
+
 	if sep not in from_addr:
-		tok = from_str.split()		
+		tok = from_str.split()
 		try:
 			at = tok.index(sep)
 			from_addr = ''.join([tok[at-1], '{AT}', tok[at+1]])
@@ -22,13 +28,18 @@ def format_from_token(from_str, sep):
 		except ValueError:
 			print(tok)
 			print("error formating 'from' " + from_str + " -- expecting sep: " + sep)
+			print("*** " + fff)
+			print("+++")
+			print(fffa)
+			print("----")
+
 			return None
 	else:
 		from_addr = from_addr.replace(sep, '{AT}')
 	return from_addr.lower()
 
 def format_from(msg, archive_name):
-	from_str = msg['from']
+	from_str = msg['from']	
 
 	if " {AT} " in from_str:
 		return format_from_token(from_str, '{AT}')

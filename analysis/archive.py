@@ -5,6 +5,8 @@ import os, datetime, json, gzip, re
 import analysis.util
 import analysis.query
 
+import search.archive ## circular...
+
 
 def filter_date(msg, archive_name):
 	
@@ -130,6 +132,14 @@ def load_from_file(filename, archive_name, archive_dir, json_data=None):
 
 			print('---> ' + archive_name)
 			return json_data_to_pd_dataframe(threads, archive_name)
+
+def load_from_search_archive(archive):
+	threads = []
+	for k, v in archive.archive.items():
+		threads.append(v)
+	return json_data_to_pd_dataframe(threads, archive.archive_name)
+
+
 				
 
 class Archive:
@@ -140,7 +150,10 @@ class Archive:
 	def __init__(self, archive_name, archive_dir="archives"):
 
 		if isinstance(archive_name, pd.core.frame.DataFrame):
-			self.dataframe = archive_name.copy()
+			self.dataframe = archive_name ## no copies here
+
+		if isinstance(archive_name, search.archive.Archive):
+			self.dataframe = load_from_search_archive(archive_name)
 
 		if isinstance(archive_name, str):
 			# need a filename or a dir name....
